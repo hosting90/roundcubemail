@@ -46,6 +46,7 @@ class rcube_h90_password
 				'password_old' => $curpass,
 				'password_new' => $passwd,
 				'remote_addr' => $_SERVER['REMOTE_ADDR'],
+				'lang' => $_SESSION['language'],
 			];
 
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -64,14 +65,14 @@ class rcube_h90_password
 					case 'same_as_previous':
 						return PASSWORD_COMPARE_NEW;
 						break;
-					case 'too_simple':
-						return PASSWORD_CONSTRAINT_VIOLATION;
-						break;
 					case 'invalid_login':
 						return PASSWORD_COMPARE_OLD;
 						break;
-					default:
+					case 'unknown':
 						return PASSWORD_ERROR;
+						break;
+					default:
+						return ['code' => PASSWORD_ERROR, 'message' => $result->error];
 						break;
 				}
 			}
